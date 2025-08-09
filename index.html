@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,7 +75,7 @@
 </div>
 
 <div class="container" id="resultScreen" style="display:none;">
-  <h2>Possible Questions (English & Malayalam)</h2>
+  <h2>Possible Questions (English)</h2>
   <div class="guesses" id="guessesList"></div>
   <button class="go-back-btn" onclick="goBack()">Go Back</button>
 </div>
@@ -94,37 +93,24 @@
       return;
     }
 
-    // Simple sample guesses — you can expand logic as needed
-    // For example, guess addition, subtraction, multiplication, division questions that result in ans
     const guesses = [];
 
-    // Addition guesses: x + y = ans (try pairs where x,y from 0 to ans)
     for(let x = 0; x <= ans; x++) {
       let y = ans - x;
-      guesses.push({
-        en: `${x} + ${y} = ${ans}`,
-        ml: `${x} കൂട്ടി ${y} = ${ans}`
-      });
-      if (guesses.length >= 5) break;  // limit guesses
+      guesses.push(`${x} + ${y} = ${ans}`);
+      if (guesses.length >= 5) break;
     }
 
-    // If no guesses found (like negative numbers or zero), add a generic guess
     if(guesses.length === 0) {
-      guesses.push({
-        en: `Some operation results in ${ans}`,
-        ml: `${ans} എന്ന ഫലമായ ഒരു കണക്കെടുപ്പ്`
-      });
+      guesses.push(`Some operation results in ${ans}`);
     }
 
-    // Show guesses in UI
     const guessDiv = document.getElementById('guessesList');
-    guessDiv.innerHTML = guesses.map(g => `<p><strong>EN:</strong> ${g.en}<br/><strong>ML:</strong> ${g.ml}</p>`).join('');
+    guessDiv.innerHTML = guesses.map(q => `<p>${q}</p>`).join('');
 
-    // Switch screens
     document.getElementById('inputScreen').style.display = 'none';
     document.getElementById('resultScreen').style.display = 'block';
 
-    // After 5 seconds show full screen message
     setTimeout(() => {
       document.getElementById('resultScreen').style.display = 'none';
       document.getElementById('fullScreenMsg').style.display = 'flex';
