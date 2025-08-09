@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Reverse Calculator</title>
+<style>
+  body {
+    margin: 0; padding: 0;
+    background-color: #121212;
+    color: #eee;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    justify-content: center;
+  }
+  .container {
+    width: 320px;
+    text-align: center;
+  }
+  input[type=number] {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    border-radius: 6px;
+    border: none;
+    margin-bottom: 16px;
+    background-color: #333;
+    color: #eee;
+  }
+  button {
+    padding: 12px 24px;
+    font-size: 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #6200ee;
+    color: white;
+  }
+  button:hover {
+    background-color: #3700b3;
+  }
+  .guesses {
+    margin-top: 20px;
+    text-align: left;
+  }
+  .full-screen-msg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #000c;
+    color: #ff4081;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
+    z-index: 9999;
+  }
+  .go-back-btn {
+    margin-top: 40px;
+    font-size: 1.2em;
+    background-color: #bb86fc;
+    color: #121212;
+  }
+</style>
+</head>
+<body>
+
+<div class="container" id="inputScreen">
+  <h1>Reverse Calculator</h1>
+  <input type="number" id="answerInput" placeholder="Enter the answer here" />
+  <button onclick="guessQuestions()">Guess Questions</button>
+</div>
+
+<div class="container" id="resultScreen" style="display:none;">
+  <h2>Possible Questions (English & Malayalam)</h2>
+  <div class="guesses" id="guessesList"></div>
+  <button class="go-back-btn" onclick="goBack()">Go Back</button>
+</div>
+
+<div class="full-screen-msg" id="fullScreenMsg" style="display:none;">
+  അയ്യോ എന്റെ പൊന്നേ.
+  <button class="go-back-btn" onclick="goBack()" style="font-size:1em; margin-top:20px;">Go Back</button>
+</div>
+
+<script>
+  function guessQuestions() {
+    const ans = Number(document.getElementById('answerInput').value);
+    if (!ans && ans !== 0) {
+      alert('Please enter a valid number');
+      return;
+    }
+
+    // Simple sample guesses — you can expand logic as needed
+    // For example, guess addition, subtraction, multiplication, division questions that result in ans
+    const guesses = [];
+
+    // Addition guesses: x + y = ans (try pairs where x,y from 0 to ans)
+    for(let x = 0; x <= ans; x++) {
+      let y = ans - x;
+      guesses.push({
+        en: `${x} + ${y} = ${ans}`,
+        ml: `${x} കൂട്ടി ${y} = ${ans}`
+      });
+      if (guesses.length >= 5) break;  // limit guesses
+    }
+
+    // If no guesses found (like negative numbers or zero), add a generic guess
+    if(guesses.length === 0) {
+      guesses.push({
+        en: `Some operation results in ${ans}`,
+        ml: `${ans} എന്ന ഫലമായ ഒരു കണക്കെടുപ്പ്`
+      });
+    }
+
+    // Show guesses in UI
+    const guessDiv = document.getElementById('guessesList');
+    guessDiv.innerHTML = guesses.map(g => `<p><strong>EN:</strong> ${g.en}<br/><strong>ML:</strong> ${g.ml}</p>`).join('');
+
+    // Switch screens
+    document.getElementById('inputScreen').style.display = 'none';
+    document.getElementById('resultScreen').style.display = 'block';
+
+    // After 5 seconds show full screen message
+    setTimeout(() => {
+      document.getElementById('resultScreen').style.display = 'none';
+      document.getElementById('fullScreenMsg').style.display = 'flex';
+    }, 5000);
+  }
+
+  function goBack() {
+    document.getElementById('answerInput').value = '';
+    document.getElementById('fullScreenMsg').style.display = 'none';
+    document.getElementById('resultScreen').style.display = 'none';
+    document.getElementById('inputScreen').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
